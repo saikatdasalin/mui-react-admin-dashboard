@@ -74,7 +74,7 @@ const Sidebar: React.FC = () => {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const { isCollapsed, toggleSidebar, isMobileOpen, setMobileOpen } = useSidebarContext();
   const { isDarkMode } = useThemeContext();
   const [openMenus, setOpenMenus] = useState<string[]>([]);
@@ -355,9 +355,9 @@ const Sidebar: React.FC = () => {
         onClose={() => setMobileOpen(false)}
         ModalProps={{ keepMounted: true }}
         sx={{
-          display: { xs: 'block', md: 'none' },
+          display: { xs: 'block', lg: 'none' },
           '& .MuiDrawer-paper': {
-            width: DRAWER_WIDTH,
+            width: { xs: 'min(86vw, 320px)', sm: DRAWER_WIDTH },
             boxSizing: 'border-box',
             border: 'none',
             scrollbarWidth: 'none',
@@ -372,7 +372,7 @@ const Sidebar: React.FC = () => {
       <Drawer
         variant="permanent"
         sx={{
-          display: { xs: 'none', md: 'block' },
+          display: { xs: 'none', lg: 'block' },
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',

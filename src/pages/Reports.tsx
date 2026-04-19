@@ -13,6 +13,7 @@ import {
   Chip,
   IconButton,
   useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Download,
@@ -66,6 +67,7 @@ const reportData = [
 
 const Reports: React.FC = () => {
   const theme = useTheme();
+  const isCompactTable = useMediaQuery(theme.breakpoints.down('md'));
   const { isDarkMode } = useThemeContext();
   const [category, setCategory] = useState('all');
   const [reportType, setReportType] = useState('all');
@@ -118,7 +120,7 @@ const Reports: React.FC = () => {
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, flexWrap: 'wrap', gap: 2 }}>
           <Box>
-            <Typography variant="h4" fontWeight={700} gutterBottom>
+            <Typography variant="h4" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.6rem', sm: '2rem' } }}>
               Reports
             </Typography>
             <Typography variant="body1" color="text.secondary">
@@ -128,7 +130,9 @@ const Reports: React.FC = () => {
           <Button
             variant="contained"
             startIcon={<BarChartIcon />}
+            fullWidth={isCompactTable}
             sx={{
+              maxWidth: { xs: '100%', sm: 'fit-content' },
               background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
               boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
             }}
@@ -146,7 +150,7 @@ const Reports: React.FC = () => {
           { label: 'Processing', value: '3', icon: <Refresh />, color: '#f59e0b' },
           { label: 'Scheduled', value: '8', icon: <Schedule />, color: '#8b5cf6' },
         ].map((stat, index) => (
-          <Grid size={{ xs: 6, md: 3 }} key={stat.label}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={stat.label}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -294,8 +298,8 @@ const Reports: React.FC = () => {
                   <Typography variant="h6" fontWeight={600}>
                     Recent Reports
                   </Typography>
-                  <Box sx={{ display: 'flex', gap: 2 }}>
-                    <FormControl size="small" sx={{ minWidth: 120 }}>
+                  <Box sx={{ display: 'flex', gap: 2, width: { xs: '100%', sm: 'auto' }, flexWrap: 'wrap' }}>
+                    <FormControl size="small" sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 120 } }}>
                       <InputLabel>Category</InputLabel>
                       <Select value={category} label="Category" onChange={(e) => setCategory(e.target.value)}>
                         <MenuItem value="all">All</MenuItem>
@@ -305,7 +309,7 @@ const Reports: React.FC = () => {
                         <MenuItem value="Marketing">Marketing</MenuItem>
                       </Select>
                     </FormControl>
-                    <FormControl size="small" sx={{ minWidth: 100 }}>
+                    <FormControl size="small" sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 100 } }}>
                       <InputLabel>Type</InputLabel>
                       <Select value={reportType} label="Type" onChange={(e) => setReportType(e.target.value)}>
                         <MenuItem value="all">All</MenuItem>
@@ -317,106 +321,181 @@ const Reports: React.FC = () => {
                   </Box>
                 </Box>
 
-                <Box sx={{ overflowX: 'auto' }}>
-                  <Box sx={{ minWidth: 700 }}>
-                    {/* Header */}
-                    <Box
-                      sx={{
-                        display: 'grid',
-                        gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 0.5fr',
-                        gap: 2,
-                        py: 1.5,
-                        px: 2,
-                        borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                        bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
-                      }}
-                    >
-                      <Typography variant="caption" fontWeight={600} color="text.secondary">NAME</Typography>
-                      <Typography variant="caption" fontWeight={600} color="text.secondary">TYPE</Typography>
-                      <Typography variant="caption" fontWeight={600} color="text.secondary">CATEGORY</Typography>
-                      <Typography variant="caption" fontWeight={600} color="text.secondary">DATE</Typography>
-                      <Typography variant="caption" fontWeight={600} color="text.secondary">SIZE</Typography>
-                      <Typography variant="caption" fontWeight={600} color="text.secondary">STATUS</Typography>
-                      <Typography variant="caption" fontWeight={600} color="text.secondary">ACTION</Typography>
-                    </Box>
-                    {/* Rows */}
+                {isCompactTable ? (
+                  <Box sx={{ display: 'grid', gap: 1.25 }}>
                     {filteredReports.map((report, index) => {
                       const statusConfig = getStatusConfig(report.status);
                       return (
                         <motion.div
                           key={report.id}
-                          initial={{ opacity: 0, x: -20 }}
+                          initial={{ opacity: 0, x: -16 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.05 }}
+                          transition={{ duration: 0.25, delay: index * 0.03 }}
                         >
                           <Box
                             sx={{
-                              display: 'grid',
-                              gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 0.5fr',
-                              gap: 2,
-                              py: 2,
-                              px: 2,
-                              alignItems: 'center',
-                              borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
-                              '&:hover': {
-                                bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
-                              },
+                              border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
+                              borderRadius: 2,
+                              p: 1.5,
+                              bgcolor: isDarkMode ? 'rgba(129,140,248,0.04)' : 'rgba(99,102,241,0.03)',
                             }}
                           >
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                              {getTypeIcon(report.type)}
-                              <Typography variant="body2" fontWeight={500}>
-                                {report.name}
-                              </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 1.5 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, minWidth: 0 }}>
+                                {getTypeIcon(report.type)}
+                                <Box sx={{ minWidth: 0 }}>
+                                  <Typography variant="body2" fontWeight={600} sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    {report.name}
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    {report.category} • {report.date}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                              <Typography variant="caption" color="text.secondary">{report.size}</Typography>
                             </Box>
-                            <Chip
-                              label={report.type}
-                              size="small"
-                              sx={{
-                                bgcolor: report.type === 'PDF' ? 'rgba(239,68,68,0.15)' : report.type === 'Excel' ? 'rgba(16,185,129,0.15)' : 'rgba(99,102,241,0.15)',
-                                color: report.type === 'PDF' ? '#ef4444' : report.type === 'Excel' ? '#10b981' : '#6366f1',
-                                fontWeight: 600,
-                              }}
-                            />
-                            <Typography variant="body2" color="text.secondary">
-                              {report.category}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {report.date}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {report.size}
-                            </Typography>
-                            <Chip
-                              icon={statusConfig.icon}
-                              label={report.status}
-                              size="small"
-                              sx={{
-                                bgcolor: statusConfig.bg,
-                                color: statusConfig.color,
-                                fontWeight: 600,
-                                '& .MuiChip-icon': { color: statusConfig.color },
-                              }}
-                            />
-                            <IconButton
-                              size="small"
-                              disabled={report.status !== 'Ready'}
-                              sx={{
-                                bgcolor: report.status === 'Ready' ? 'primary.main' : 'transparent',
-                                color: report.status === 'Ready' ? 'white' : 'text.disabled',
-                                '&:hover': {
-                                  bgcolor: report.status === 'Ready' ? 'primary.dark' : 'transparent',
-                                },
-                              }}
-                            >
-                              <Download fontSize="small" />
-                            </IconButton>
+                            <Box sx={{ mt: 1.25, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, flexWrap: 'wrap' }}>
+                              <Chip
+                                label={report.type}
+                                size="small"
+                                sx={{
+                                  bgcolor: report.type === 'PDF' ? 'rgba(239,68,68,0.15)' : report.type === 'Excel' ? 'rgba(16,185,129,0.15)' : 'rgba(99,102,241,0.15)',
+                                  color: report.type === 'PDF' ? '#ef4444' : report.type === 'Excel' ? '#10b981' : '#6366f1',
+                                  fontWeight: 600,
+                                }}
+                              />
+                              <Chip
+                                icon={statusConfig.icon}
+                                label={report.status}
+                                size="small"
+                                sx={{
+                                  bgcolor: statusConfig.bg,
+                                  color: statusConfig.color,
+                                  fontWeight: 600,
+                                  '& .MuiChip-icon': { color: statusConfig.color },
+                                }}
+                              />
+                              <IconButton
+                                size="small"
+                                disabled={report.status !== 'Ready'}
+                                sx={{
+                                  bgcolor: report.status === 'Ready' ? 'primary.main' : 'transparent',
+                                  color: report.status === 'Ready' ? 'white' : 'text.disabled',
+                                  '&:hover': {
+                                    bgcolor: report.status === 'Ready' ? 'primary.dark' : 'transparent',
+                                  },
+                                }}
+                              >
+                                <Download fontSize="small" />
+                              </IconButton>
+                            </Box>
                           </Box>
                         </motion.div>
                       );
                     })}
                   </Box>
-                </Box>
+                ) : (
+                  <Box sx={{ overflowX: 'auto' }}>
+                    <Box sx={{ minWidth: 700 }}>
+                      {/* Header */}
+                      <Box
+                        sx={{
+                          display: 'grid',
+                          gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 0.5fr',
+                          gap: 2,
+                          py: 1.5,
+                          px: 2,
+                          borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                          bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
+                        }}
+                      >
+                        <Typography variant="caption" fontWeight={600} color="text.secondary">NAME</Typography>
+                        <Typography variant="caption" fontWeight={600} color="text.secondary">TYPE</Typography>
+                        <Typography variant="caption" fontWeight={600} color="text.secondary">CATEGORY</Typography>
+                        <Typography variant="caption" fontWeight={600} color="text.secondary">DATE</Typography>
+                        <Typography variant="caption" fontWeight={600} color="text.secondary">SIZE</Typography>
+                        <Typography variant="caption" fontWeight={600} color="text.secondary">STATUS</Typography>
+                        <Typography variant="caption" fontWeight={600} color="text.secondary">ACTION</Typography>
+                      </Box>
+                      {/* Rows */}
+                      {filteredReports.map((report, index) => {
+                        const statusConfig = getStatusConfig(report.status);
+                        return (
+                          <motion.div
+                            key={report.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                          >
+                            <Box
+                              sx={{
+                                display: 'grid',
+                                gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 0.5fr',
+                                gap: 2,
+                                py: 2,
+                                px: 2,
+                                alignItems: 'center',
+                                borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
+                                '&:hover': {
+                                  bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
+                                },
+                              }}
+                            >
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                {getTypeIcon(report.type)}
+                                <Typography variant="body2" fontWeight={500}>
+                                  {report.name}
+                                </Typography>
+                              </Box>
+                              <Chip
+                                label={report.type}
+                                size="small"
+                                sx={{
+                                  bgcolor: report.type === 'PDF' ? 'rgba(239,68,68,0.15)' : report.type === 'Excel' ? 'rgba(16,185,129,0.15)' : 'rgba(99,102,241,0.15)',
+                                  color: report.type === 'PDF' ? '#ef4444' : report.type === 'Excel' ? '#10b981' : '#6366f1',
+                                  fontWeight: 600,
+                                }}
+                              />
+                              <Typography variant="body2" color="text.secondary">
+                                {report.category}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {report.date}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {report.size}
+                              </Typography>
+                              <Chip
+                                icon={statusConfig.icon}
+                                label={report.status}
+                                size="small"
+                                sx={{
+                                  bgcolor: statusConfig.bg,
+                                  color: statusConfig.color,
+                                  fontWeight: 600,
+                                  '& .MuiChip-icon': { color: statusConfig.color },
+                                }}
+                              />
+                              <IconButton
+                                size="small"
+                                disabled={report.status !== 'Ready'}
+                                sx={{
+                                  bgcolor: report.status === 'Ready' ? 'primary.main' : 'transparent',
+                                  color: report.status === 'Ready' ? 'white' : 'text.disabled',
+                                  '&:hover': {
+                                    bgcolor: report.status === 'Ready' ? 'primary.dark' : 'transparent',
+                                  },
+                                }}
+                              >
+                                <Download fontSize="small" />
+                              </IconButton>
+                            </Box>
+                          </motion.div>
+                        );
+                      })}
+                    </Box>
+                  </Box>
+                )}
               </CardContent>
             </Card>
           </motion.div>

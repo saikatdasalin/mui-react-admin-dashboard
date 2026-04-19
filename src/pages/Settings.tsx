@@ -97,7 +97,7 @@ const Settings: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Typography variant="h4" fontWeight={700} gutterBottom>
+        <Typography variant="h4" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.6rem', sm: '2rem' } }}>
           Settings
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
@@ -118,7 +118,7 @@ const Settings: React.FC = () => {
               title="Profile Settings"
               description="Update your personal information"
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 3, flexWrap: 'wrap' }}>
                 <Box sx={{ position: 'relative' }}>
                   <Avatar
                     sx={{
@@ -184,8 +184,8 @@ const Settings: React.FC = () => {
               title="Notification Settings"
               description="Manage how you receive notifications"
             >
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' }, gap: 1 }}>
                   <Box>
                     <Typography variant="body1" fontWeight={500}>Email Notifications</Typography>
                     <Typography variant="body2" color="text.secondary">Receive notifications via email</Typography>
@@ -197,7 +197,7 @@ const Settings: React.FC = () => {
                   />
                 </Box>
                 <Divider />
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' }, gap: 1 }}>
                   <Box>
                     <Typography variant="body1" fontWeight={500}>Push Notifications</Typography>
                     <Typography variant="body2" color="text.secondary">Receive push notifications</Typography>
@@ -209,7 +209,7 @@ const Settings: React.FC = () => {
                   />
                 </Box>
                 <Divider />
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' }, gap: 1 }}>
                   <Box>
                     <Typography variant="body1" fontWeight={500}>SMS Notifications</Typography>
                     <Typography variant="body2" color="text.secondary">Receive SMS alerts</Typography>
@@ -221,7 +221,7 @@ const Settings: React.FC = () => {
                   />
                 </Box>
                 <Divider />
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' }, gap: 1 }}>
                   <Box>
                     <Typography variant="body1" fontWeight={500}>Marketing Emails</Typography>
                     <Typography variant="body2" color="text.secondary">Receive marketing and promotional emails</Typography>
@@ -248,7 +248,7 @@ const Settings: React.FC = () => {
               description="Manage your account security"
             >
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' }, gap: 1 }}>
                   <Box>
                     <Typography variant="body1" fontWeight={500}>Two-Factor Authentication</Typography>
                     <Typography variant="body2" color="text.secondary">Add an extra layer of security</Typography>
@@ -260,7 +260,7 @@ const Settings: React.FC = () => {
                   />
                 </Box>
                 <Divider />
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' }, gap: 1 }}>
                   <Box>
                     <Typography variant="body1" fontWeight={500}>Login Alerts</Typography>
                     <Typography variant="body2" color="text.secondary">Get notified of new logins</Typography>
@@ -272,12 +272,12 @@ const Settings: React.FC = () => {
                   />
                 </Box>
                 <Divider />
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' }, gap: 1 }}>
                   <Box>
                     <Typography variant="body1" fontWeight={500}>Session Timeout</Typography>
                     <Typography variant="body2" color="text.secondary">Auto logout after inactivity</Typography>
                   </Box>
-                  <FormControl size="small" sx={{ minWidth: 120 }}>
+                  <FormControl size="small" sx={{ minWidth: { sm: 120 }, width: { xs: '100%', sm: 'auto' } }}>
                     <Select
                       value={security.sessionTimeout}
                       onChange={(e) => setSecurity({ ...security, sessionTimeout: e.target.value })}
@@ -290,7 +290,7 @@ const Settings: React.FC = () => {
                   </FormControl>
                 </Box>
                 <Divider />
-                <Button variant="outlined" color="error" sx={{ alignSelf: 'flex-start' }}>
+                <Button variant="outlined" color="error" sx={{ alignSelf: 'flex-start', width: { xs: '100%', sm: 'auto' } }}>
                   Change Password
                 </Button>
               </Box>
@@ -311,7 +311,7 @@ const Settings: React.FC = () => {
               description="Customize the look and feel"
             >
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' }, gap: 1 }}>
                   <Box>
                     <Typography variant="body1" fontWeight={500}>Dark Mode</Typography>
                     <Typography variant="body2" color="text.secondary">Toggle dark theme</Typography>

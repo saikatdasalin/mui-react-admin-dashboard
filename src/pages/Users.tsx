@@ -13,6 +13,8 @@ import {
   MenuItem,
   Button,
   Grid,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Search,
@@ -50,6 +52,8 @@ const users: User[] = [
 ];
 
 const Users: React.FC = () => {
+  const theme = useTheme();
+  const isCompactTable = useMediaQuery(theme.breakpoints.down('md'));
   const { isDarkMode } = useThemeContext();
   const [searchTerm, setSearchTerm] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -113,7 +117,7 @@ const Users: React.FC = () => {
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, flexWrap: 'wrap', gap: 2 }}>
           <Box>
-            <Typography variant="h4" fontWeight={700} gutterBottom>
+            <Typography variant="h4" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.6rem', sm: '2rem' } }}>
               User Management
             </Typography>
             <Typography variant="body1" color="text.secondary">
@@ -123,7 +127,9 @@ const Users: React.FC = () => {
           <Button
             variant="contained"
             startIcon={<Add />}
+            fullWidth={isCompactTable}
             sx={{
+              maxWidth: { xs: '100%', sm: 'fit-content' },
               background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
               boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
               '&:hover': {
@@ -144,7 +150,7 @@ const Users: React.FC = () => {
           { label: 'Inactive Users', value: '1,890', color: '#ef4444' },
           { label: 'Pending Users', value: '425', color: '#f59e0b' },
         ].map((stat, index) => (
-          <Grid size={{ xs: 6, md: 3 }} key={stat.label}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={stat.label}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -179,7 +185,7 @@ const Users: React.FC = () => {
                 size="small"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                sx={{ flex: 1, minWidth: 250 }}
+                sx={{ flex: 1, minWidth: { xs: 0, sm: 240 }, width: { xs: '100%', sm: 'auto' } }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -191,6 +197,7 @@ const Users: React.FC = () => {
               <Button
                 variant="outlined"
                 startIcon={<FilterList />}
+                fullWidth={isCompactTable}
                 sx={{ borderColor: isDarkMode ? 'rgba(129,140,248,0.3)' : 'rgba(99,102,241,0.3)' }}
               >
                 Filters
@@ -208,115 +215,189 @@ const Users: React.FC = () => {
       >
         <Card sx={cardStyle}>
           <CardContent sx={{ p: 0 }}>
-            <Box sx={{ overflowX: 'auto' }}>
-              <Box sx={{ minWidth: 800 }}>
-                {/* Header */}
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '2fr 2fr 1fr 1fr 1fr 0.5fr',
-                    gap: 2,
-                    py: 2,
-                    px: 3,
-                    borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                    bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
-                  }}
-                >
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    USER
-                  </Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    EMAIL
-                  </Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    ROLE
-                  </Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    STATUS
-                  </Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    LAST ACTIVE
-                  </Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    ACTIONS
-                  </Typography>
-                </Box>
-                {/* Rows */}
+            {isCompactTable ? (
+              <Box sx={{ p: 1.5, display: 'grid', gap: 1.25 }}>
                 {filteredUsers.map((user, index) => (
                   <motion.div
                     key={user.id}
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -16 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    transition={{ duration: 0.25, delay: index * 0.03 }}
                   >
                     <Box
                       sx={{
-                        display: 'grid',
-                        gridTemplateColumns: '2fr 2fr 1fr 1fr 1fr 0.5fr',
-                        gap: 2,
-                        py: 2,
-                        px: 3,
-                        alignItems: 'center',
-                        borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
-                        '&:hover': {
-                          bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
-                        },
-                        transition: 'background-color 0.2s ease',
+                        border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
+                        borderRadius: 2,
+                        p: 1.5,
+                        bgcolor: isDarkMode ? 'rgba(129,140,248,0.04)' : 'rgba(99,102,241,0.03)',
                       }}
                     >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <Avatar
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 1.5 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, minWidth: 0 }}>
+                          <Avatar
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              background: getRoleColor(user.role),
+                              fontSize: '0.8rem',
+                              fontWeight: 600,
+                            }}
+                          >
+                            {user.avatar}
+                          </Avatar>
+                          <Box sx={{ minWidth: 0 }}>
+                            <Typography variant="body2" fontWeight={600} sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {user.name}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                              {user.email}
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <IconButton size="small" onClick={(e) => handleMenuOpen(e, user.id)}>
+                          <MoreVert />
+                        </IconButton>
+                      </Box>
+                      <Box sx={{ mt: 1.25, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, flexWrap: 'wrap' }}>
+                        <Chip
+                          label={user.role}
+                          size="small"
                           sx={{
-                            width: 40,
-                            height: 40,
                             background: getRoleColor(user.role),
-                            fontSize: '0.875rem',
+                            color: 'white',
                             fontWeight: 600,
+                            fontSize: '0.72rem',
                           }}
-                        >
-                          {user.avatar}
-                        </Avatar>
-                        <Typography variant="body2" fontWeight={500}>
-                          {user.name}
+                        />
+                        <Chip
+                          label={user.status}
+                          size="small"
+                          sx={{
+                            bgcolor: getStatusColor(user.status).bg,
+                            color: getStatusColor(user.status).color,
+                            fontWeight: 600,
+                            fontSize: '0.72rem',
+                          }}
+                        />
+                        <Typography variant="caption" color="text.secondary">
+                          Last active: {user.lastActive}
                         </Typography>
                       </Box>
-                      <Typography variant="body2" color="text.secondary">
-                        {user.email}
-                      </Typography>
-                      <Chip
-                        label={user.role}
-                        size="small"
-                        sx={{
-                          background: getRoleColor(user.role),
-                          color: 'white',
-                          fontWeight: 600,
-                          fontSize: '0.75rem',
-                        }}
-                      />
-                      <Chip
-                        label={user.status}
-                        size="small"
-                        sx={{
-                          bgcolor: getStatusColor(user.status).bg,
-                          color: getStatusColor(user.status).color,
-                          fontWeight: 600,
-                          fontSize: '0.75rem',
-                        }}
-                      />
-                      <Typography variant="body2" color="text.secondary">
-                        {user.lastActive}
-                      </Typography>
-                      <IconButton
-                        size="small"
-                        onClick={(e) => handleMenuOpen(e, user.id)}
-                      >
-                        <MoreVert />
-                      </IconButton>
                     </Box>
                   </motion.div>
                 ))}
               </Box>
-            </Box>
+            ) : (
+              <Box sx={{ overflowX: 'auto' }}>
+                <Box sx={{ minWidth: 800 }}>
+                  {/* Header */}
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: '2fr 2fr 1fr 1fr 1fr 0.5fr',
+                      gap: 2,
+                      py: 2,
+                      px: 3,
+                      borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                      bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
+                    }}
+                  >
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                      USER
+                    </Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                      EMAIL
+                    </Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                      ROLE
+                    </Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                      STATUS
+                    </Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                      LAST ACTIVE
+                    </Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                      ACTIONS
+                    </Typography>
+                  </Box>
+                  {/* Rows */}
+                  {filteredUsers.map((user, index) => (
+                    <motion.div
+                      key={user.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'grid',
+                          gridTemplateColumns: '2fr 2fr 1fr 1fr 1fr 0.5fr',
+                          gap: 2,
+                          py: 2,
+                          px: 3,
+                          alignItems: 'center',
+                          borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
+                          '&:hover': {
+                            bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
+                          },
+                          transition: 'background-color 0.2s ease',
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <Avatar
+                            sx={{
+                              width: 40,
+                              height: 40,
+                              background: getRoleColor(user.role),
+                              fontSize: '0.875rem',
+                              fontWeight: 600,
+                            }}
+                          >
+                            {user.avatar}
+                          </Avatar>
+                          <Typography variant="body2" fontWeight={500}>
+                            {user.name}
+                          </Typography>
+                        </Box>
+                        <Typography variant="body2" color="text.secondary">
+                          {user.email}
+                        </Typography>
+                        <Chip
+                          label={user.role}
+                          size="small"
+                          sx={{
+                            background: getRoleColor(user.role),
+                            color: 'white',
+                            fontWeight: 600,
+                            fontSize: '0.75rem',
+                          }}
+                        />
+                        <Chip
+                          label={user.status}
+                          size="small"
+                          sx={{
+                            bgcolor: getStatusColor(user.status).bg,
+                            color: getStatusColor(user.status).color,
+                            fontWeight: 600,
+                            fontSize: '0.75rem',
+                          }}
+                        />
+                        <Typography variant="body2" color="text.secondary">
+                          {user.lastActive}
+                        </Typography>
+                        <IconButton
+                          size="small"
+                          onClick={(e) => handleMenuOpen(e, user.id)}
+                        >
+                          <MoreVert />
+                        </IconButton>
+                      </Box>
+                    </motion.div>
+                  ))}
+                </Box>
+              </Box>
+            )}
           </CardContent>
         </Card>
       </motion.div>

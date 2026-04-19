@@ -12,6 +12,8 @@ import {
   Grid,
   Avatar,
   LinearProgress,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Search,
@@ -50,6 +52,8 @@ const orders: Order[] = [
 ];
 
 const Orders: React.FC = () => {
+  const theme = useTheme();
+  const isCompactTable = useMediaQuery(theme.breakpoints.down('md'));
   const { isDarkMode } = useThemeContext();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -97,7 +101,7 @@ const Orders: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Typography variant="h4" fontWeight={700} gutterBottom>
+        <Typography variant="h4" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.6rem', sm: '2rem' } }}>
           Orders Management
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
@@ -108,7 +112,7 @@ const Orders: React.FC = () => {
       {/* Stats Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {stats.map((stat, index) => (
-          <Grid size={{ xs: 6, md: 3 }} key={stat.label}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={stat.label}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -161,7 +165,7 @@ const Orders: React.FC = () => {
                 size="small"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                sx={{ flex: 1, minWidth: 250 }}
+                sx={{ flex: 1, minWidth: { xs: 0, sm: 240 }, width: { xs: '100%', sm: 'auto' } }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -173,6 +177,7 @@ const Orders: React.FC = () => {
               <Button
                 variant="outlined"
                 startIcon={<FilterList />}
+                fullWidth={isCompactTable}
                 sx={{ borderColor: isDarkMode ? 'rgba(129,140,248,0.3)' : 'rgba(99,102,241,0.3)' }}
               >
                 Filters
@@ -190,80 +195,58 @@ const Orders: React.FC = () => {
       >
         <Card sx={cardStyle}>
           <CardContent sx={{ p: 0 }}>
-            <Box sx={{ overflowX: 'auto' }}>
-              <Box sx={{ minWidth: 900 }}>
-                {/* Header */}
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 2fr 1fr 1fr 1.5fr 1fr 0.5fr',
-                    gap: 2,
-                    py: 2,
-                    px: 3,
-                    borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                    bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
-                  }}
-                >
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">ORDER ID</Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">CUSTOMER</Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">ITEMS</Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">TOTAL</Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">STATUS</Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">DATE</Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">ACTIONS</Typography>
-                </Box>
-                {/* Rows */}
+            {isCompactTable ? (
+              <Box sx={{ p: 1.5, display: 'grid', gap: 1.25 }}>
                 {filteredOrders.map((order, index) => {
                   const statusConfig = getStatusConfig(order.status);
                   return (
                     <motion.div
                       key={order.id}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -16 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      transition={{ duration: 0.25, delay: index * 0.03 }}
                     >
                       <Box
                         sx={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 2fr 1fr 1fr 1.5fr 1fr 0.5fr',
-                          gap: 2,
-                          py: 2.5,
-                          px: 3,
-                          alignItems: 'center',
-                          borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
-                          '&:hover': {
-                            bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
-                          },
+                          border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
+                          borderRadius: 2,
+                          p: 1.5,
+                          bgcolor: isDarkMode ? 'rgba(129,140,248,0.04)' : 'rgba(99,102,241,0.03)',
                         }}
                       >
-                        <Typography variant="body2" fontWeight={600} color="primary">
-                          {order.id}
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 1.25 }}>
+                          <Box>
+                            <Typography variant="body2" fontWeight={700} color="primary">
+                              {order.id}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">{order.date}</Typography>
+                          </Box>
+                          <Typography variant="body2" fontWeight={700}>
+                            ${order.total.toFixed(2)}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ mt: 1.25, display: 'flex', alignItems: 'center', gap: 1.25 }}>
                           <Avatar
                             sx={{
-                              width: 36,
-                              height: 36,
+                              width: 34,
+                              height: 34,
                               background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                              fontSize: '0.8rem',
+                              fontSize: '0.78rem',
                             }}
                           >
                             {order.avatar}
                           </Avatar>
-                          <Box>
-                            <Typography variant="body2" fontWeight={500}>
+                          <Box sx={{ minWidth: 0 }}>
+                            <Typography variant="body2" fontWeight={600} sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {order.customer}
                             </Typography>
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography variant="caption" color="text.secondary" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
                               {order.email}
                             </Typography>
                           </Box>
                         </Box>
-                        <Typography variant="body2">{order.items} items</Typography>
-                        <Typography variant="body2" fontWeight={600}>
-                          ${order.total.toFixed(2)}
-                        </Typography>
-                        <Box>
+                        <Box sx={{ mt: 1.25, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, flexWrap: 'wrap' }}>
+                          <Typography variant="caption" color="text.secondary">{order.items} items</Typography>
                           <Chip
                             icon={statusConfig.icon}
                             label={order.status}
@@ -275,40 +258,157 @@ const Orders: React.FC = () => {
                               '& .MuiChip-icon': { color: statusConfig.color },
                             }}
                           />
-                          {order.status !== 'Cancelled' && (
-                            <LinearProgress
-                              variant="determinate"
-                              value={order.progress}
-                              sx={{
-                                mt: 1,
-                                height: 4,
+                          <Box sx={{ display: 'flex', gap: 0.5 }}>
+                            <IconButton size="small">
+                              <Visibility fontSize="small" />
+                            </IconButton>
+                            <IconButton size="small">
+                              <MoreVert fontSize="small" />
+                            </IconButton>
+                          </Box>
+                        </Box>
+                        {order.status !== 'Cancelled' && (
+                          <LinearProgress
+                            variant="determinate"
+                            value={order.progress}
+                            sx={{
+                              mt: 1.1,
+                              height: 4,
+                              borderRadius: 2,
+                              bgcolor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                              '& .MuiLinearProgress-bar': {
+                                bgcolor: statusConfig.color,
                                 borderRadius: 2,
-                                bgcolor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
-                                '& .MuiLinearProgress-bar': {
-                                  bgcolor: statusConfig.color,
-                                  borderRadius: 2,
-                                },
-                              }}
-                            />
-                          )}
-                        </Box>
-                        <Typography variant="body2" color="text.secondary">
-                          {order.date}
-                        </Typography>
-                        <Box sx={{ display: 'flex', gap: 0.5 }}>
-                          <IconButton size="small">
-                            <Visibility fontSize="small" />
-                          </IconButton>
-                          <IconButton size="small">
-                            <MoreVert fontSize="small" />
-                          </IconButton>
-                        </Box>
+                              },
+                            }}
+                          />
+                        )}
                       </Box>
                     </motion.div>
                   );
                 })}
               </Box>
-            </Box>
+            ) : (
+              <Box sx={{ overflowX: 'auto' }}>
+                <Box sx={{ minWidth: 900 }}>
+                  {/* Header */}
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 2fr 1fr 1fr 1.5fr 1fr 0.5fr',
+                      gap: 2,
+                      py: 2,
+                      px: 3,
+                      borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                      bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
+                    }}
+                  >
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">ORDER ID</Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">CUSTOMER</Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">ITEMS</Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">TOTAL</Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">STATUS</Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">DATE</Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">ACTIONS</Typography>
+                  </Box>
+                  {/* Rows */}
+                  {filteredOrders.map((order, index) => {
+                    const statusConfig = getStatusConfig(order.status);
+                    return (
+                      <motion.div
+                        key={order.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 2fr 1fr 1fr 1.5fr 1fr 0.5fr',
+                            gap: 2,
+                            py: 2.5,
+                            px: 3,
+                            alignItems: 'center',
+                            borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
+                            '&:hover': {
+                              bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
+                            },
+                          }}
+                        >
+                          <Typography variant="body2" fontWeight={600} color="primary">
+                            {order.id}
+                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Avatar
+                              sx={{
+                                width: 36,
+                                height: 36,
+                                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                fontSize: '0.8rem',
+                              }}
+                            >
+                              {order.avatar}
+                            </Avatar>
+                            <Box>
+                              <Typography variant="body2" fontWeight={500}>
+                                {order.customer}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {order.email}
+                              </Typography>
+                            </Box>
+                          </Box>
+                          <Typography variant="body2">{order.items} items</Typography>
+                          <Typography variant="body2" fontWeight={600}>
+                            ${order.total.toFixed(2)}
+                          </Typography>
+                          <Box>
+                            <Chip
+                              icon={statusConfig.icon}
+                              label={order.status}
+                              size="small"
+                              sx={{
+                                bgcolor: statusConfig.bg,
+                                color: statusConfig.color,
+                                fontWeight: 600,
+                                '& .MuiChip-icon': { color: statusConfig.color },
+                              }}
+                            />
+                            {order.status !== 'Cancelled' && (
+                              <LinearProgress
+                                variant="determinate"
+                                value={order.progress}
+                                sx={{
+                                  mt: 1,
+                                  height: 4,
+                                  borderRadius: 2,
+                                  bgcolor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                                  '& .MuiLinearProgress-bar': {
+                                    bgcolor: statusConfig.color,
+                                    borderRadius: 2,
+                                  },
+                                }}
+                              />
+                            )}
+                          </Box>
+                          <Typography variant="body2" color="text.secondary">
+                            {order.date}
+                          </Typography>
+                          <Box sx={{ display: 'flex', gap: 0.5 }}>
+                            <IconButton size="small">
+                              <Visibility fontSize="small" />
+                            </IconButton>
+                            <IconButton size="small">
+                              <MoreVert fontSize="small" />
+                            </IconButton>
+                          </Box>
+                        </Box>
+                      </motion.div>
+                    );
+                  })}
+                </Box>
+              </Box>
+            )}
           </CardContent>
         </Card>
       </motion.div>

@@ -9,6 +9,8 @@ import {
   IconButton,
   Chip,
   Avatar,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   ChevronLeft,
@@ -42,6 +44,8 @@ const events: Event[] = [
 ];
 
 const Calendar: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { isDarkMode } = useThemeContext();
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -88,7 +92,7 @@ const Calendar: React.FC = () => {
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, flexWrap: 'wrap', gap: 2 }}>
           <Box>
-            <Typography variant="h4" fontWeight={700} gutterBottom>
+            <Typography variant="h4" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.6rem', sm: '2rem' } }}>
               Calendar
             </Typography>
             <Typography variant="body1" color="text.secondary">
@@ -98,7 +102,9 @@ const Calendar: React.FC = () => {
           <Button
             variant="contained"
             startIcon={<Add />}
+            fullWidth={isMobile}
             sx={{
+              maxWidth: { xs: '100%', sm: 'fit-content' },
               background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
               boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
             }}
@@ -123,7 +129,7 @@ const Calendar: React.FC = () => {
                   <IconButton onClick={() => navigateMonth(-1)}>
                     <ChevronLeft />
                   </IconButton>
-                  <Typography variant="h5" fontWeight={600}>
+                  <Typography variant={isMobile ? 'h6' : 'h5'} fontWeight={600}>
                     {months[currentDate.getMonth()]} {currentDate.getFullYear()}
                   </Typography>
                   <IconButton onClick={() => navigateMonth(1)}>
@@ -141,7 +147,7 @@ const Calendar: React.FC = () => {
                         color="text.secondary"
                         sx={{ display: 'block', textAlign: 'center' }}
                       >
-                        {day}
+                        {isMobile ? day[0] : day}
                       </Typography>
                     </Grid>
                   ))}

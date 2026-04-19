@@ -10,6 +10,8 @@ import {
   Chip,
   LinearProgress,
   IconButton,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Edit,
@@ -27,6 +29,8 @@ import { motion } from 'framer-motion';
 import { useThemeContext } from '../context/ThemeContext';
 
 const Profile: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { isDarkMode } = useThemeContext();
 
   const cardStyle = {
@@ -66,7 +70,7 @@ const Profile: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Typography variant="h4" fontWeight={700} gutterBottom>
+        <Typography variant="h4" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.6rem', sm: '2rem' } }}>
           My Profile
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
@@ -110,7 +114,7 @@ const Profile: React.FC = () => {
                 <Typography variant="body2" color="text.secondary" gutterBottom>
                   Senior Administrator
                 </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 3 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 3, flexWrap: 'wrap' }}>
                   <Chip
                     label="Admin"
                     size="small"
@@ -233,7 +237,7 @@ const Profile: React.FC = () => {
                   best practices. Skilled in React, TypeScript, Node.js, and cloud technologies. Always eager to
                   learn new technologies and contribute to innovative projects.
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 3, mt: 3 }}>
+                <Box sx={{ display: 'flex', gap: 3, mt: 3, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Work sx={{ color: 'primary.main', fontSize: 20 }} />
                     <Typography variant="body2">Tech Corp Inc.</Typography>

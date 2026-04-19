@@ -14,6 +14,8 @@ import {
   ListItemText,
   Divider,
   Button,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Search,
@@ -24,6 +26,7 @@ import {
   Phone,
   VideoCall,
   Circle,
+  ArrowBack,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useThemeContext } from '../context/ThemeContext';
@@ -66,8 +69,10 @@ const messages: Message[] = [
 ];
 
 const Messages: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { isDarkMode } = useThemeContext();
-  const [selectedContact, setSelectedContact] = useState<Contact>(contacts[0]);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(isMobile ? null : contacts[0]);
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -81,6 +86,7 @@ const Messages: React.FC = () => {
   const filteredContacts = contacts.filter((contact) =>
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const activeContact = selectedContact ?? contacts[0];
 
   return (
     <Box>
@@ -89,7 +95,7 @@ const Messages: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Typography variant="h4" fontWeight={700} gutterBottom>
+        <Typography variant="h4" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.6rem', sm: '2rem' } }}>
           Messages
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
@@ -102,7 +108,7 @@ const Messages: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <Card sx={{ ...cardStyle, height: 'calc(100vh - 250px)', minHeight: 500 }}>
+        <Card sx={{ ...cardStyle, height: { xs: 'calc(100dvh - 150px)', md: 'calc(100vh - 250px)' }, minHeight: { xs: 440, md: 500 } }}>
           <Box sx={{ display: 'flex', height: '100%' }}>
             {/* Contacts List */}
             <Box
@@ -136,7 +142,7 @@ const Messages: React.FC = () => {
                     onClick={() => setSelectedContact(contact)}
                     sx={{
                       cursor: 'pointer',
-                      bgcolor: selectedContact.id === contact.id
+                      bgcolor: selectedContact?.id === contact.id
                         ? isDarkMode
                           ? 'rgba(129,140,248,0.1)'
                           : 'rgba(99,102,241,0.08)'
@@ -219,7 +225,7 @@ const Messages: React.FC = () => {
             </Box>
 
             {/* Chat Area */}
-            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ flex: 1, display: { xs: selectedContact ? 'flex' : 'none', md: 'flex' }, flexDirection: 'column' }}>
               {/* Chat Header */}
               <Box
                 sx={{
@@ -231,11 +237,16 @@ const Messages: React.FC = () => {
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  {isMobile && selectedContact && (
+                    <IconButton size="small" onClick={() => setSelectedContact(null)}>
+                      <ArrowBack />
+                    </IconButton>
+                  )}
                   <Badge
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     badgeContent={
-                      selectedContact.online ? (
+                      activeContact.online ? (
                         <Circle sx={{ fontSize: 12, color: '#10b981' }} />
                       ) : null
                     }
@@ -245,15 +256,15 @@ const Messages: React.FC = () => {
                         background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
                       }}
                     >
-                      {selectedContact.avatar}
+                      {activeContact.avatar}
                     </Avatar>
                   </Badge>
                   <Box>
                     <Typography variant="subtitle1" fontWeight={600}>
-                      {selectedContact.name}
+                      {activeContact.name}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      {selectedContact.online ? 'Online' : 'Offline'}
+                      {activeContact.online ? 'Online' : 'Offline'}
                     </Typography>
                   </Box>
                 </Box>

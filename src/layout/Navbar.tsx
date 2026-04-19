@@ -35,7 +35,7 @@ const COLLAPSED_WIDTH = 80;
 
 const Navbar: React.FC = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const { isCollapsed, setMobileOpen } = useSidebarContext();
   const { isDarkMode, toggleTheme } = useThemeContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -71,8 +71,8 @@ const Navbar: React.FC = () => {
       position="fixed"
       elevation={0}
       sx={{
-        width: { md: `calc(100% - ${isCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH}px)` },
-        ml: { md: `${isCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH}px` },
+        width: { lg: `calc(100% - ${isCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH}px)` },
+        ml: { lg: `${isCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH}px` },
         transition: 'all 0.3s ease',
         background: isDarkMode
           ? 'linear-gradient(135deg, rgba(15,23,42,0.8) 0%, rgba(30,41,59,0.8) 100%)'
@@ -81,9 +81,16 @@ const Navbar: React.FC = () => {
         borderBottom: `1px solid ${isDarkMode ? 'rgba(129,140,248,0.1)' : 'rgba(99,102,241,0.1)'}`,
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
+      <Toolbar
+        sx={{
+          justifyContent: 'space-between',
+          minHeight: { xs: 64, sm: 72 },
+          px: { xs: 1, sm: 2 },
+          gap: { xs: 1, sm: 2 },
+        }}
+      >
         {/* Left Section */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 }, flexGrow: 1, minWidth: 0 }}>
           {isMobile && (
             <IconButton
               onClick={() => setMobileOpen(true)}
@@ -98,15 +105,15 @@ const Navbar: React.FC = () => {
           {/* Search Bar */}
           <Box
             sx={{
-              display: 'flex',
+              display: { xs: 'none', sm: 'flex' },
               alignItems: 'center',
               background: isDarkMode
                 ? 'rgba(129,140,248,0.1)'
                 : 'rgba(99,102,241,0.08)',
               borderRadius: 3,
-              px: 2,
+              px: { sm: 1.5, md: 2 },
               py: 0.5,
-              minWidth: { xs: 150, sm: 250, md: 350 },
+              width: { sm: 'clamp(180px, 40vw, 420px)', lg: 'clamp(260px, 36vw, 520px)' },
               border: `1px solid ${isDarkMode ? 'rgba(129,140,248,0.2)' : 'rgba(99,102,241,0.15)'}`,
               transition: 'all 0.2s ease',
               '&:focus-within': {
@@ -131,7 +138,7 @@ const Navbar: React.FC = () => {
         </Box>
 
         {/* Right Section */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 }, flexShrink: 0 }}>
           {/* Theme Toggle */}
           <Tooltip title={isDarkMode ? 'Light Mode' : 'Dark Mode'}>
             <Box>
@@ -142,6 +149,7 @@ const Navbar: React.FC = () => {
                     ? 'rgba(251,191,36,0.15)'
                     : 'rgba(99,102,241,0.1)',
                   color: isDarkMode ? '#fbbf24' : '#6366f1',
+                  p: { xs: 0.9, sm: 1.1 },
                   '&:hover': {
                     background: isDarkMode
                       ? 'rgba(251,191,36,0.25)'
@@ -156,12 +164,13 @@ const Navbar: React.FC = () => {
 
           {/* Messages */}
           <Tooltip title="Messages">
-            <Box>
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <IconButton
                 sx={{
                   background: isDarkMode
                     ? 'rgba(129,140,248,0.1)'
                     : 'rgba(99,102,241,0.08)',
+                  p: { sm: 1, md: 1.1 },
                   '&:hover': {
                     background: isDarkMode
                       ? 'rgba(129,140,248,0.2)'
@@ -185,6 +194,7 @@ const Navbar: React.FC = () => {
                   background: isDarkMode
                     ? 'rgba(129,140,248,0.1)'
                     : 'rgba(99,102,241,0.08)',
+                  p: { xs: 0.9, sm: 1.1 },
                   '&:hover': {
                     background: isDarkMode
                       ? 'rgba(129,140,248,0.2)'
@@ -201,12 +211,13 @@ const Navbar: React.FC = () => {
 
           {/* Settings */}
           <Tooltip title="Settings">
-            <Box>
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <IconButton
                 sx={{
                   background: isDarkMode
                     ? 'rgba(129,140,248,0.1)'
                     : 'rgba(99,102,241,0.08)',
+                  p: { sm: 1, md: 1.1 },
                   '&:hover': {
                     background: isDarkMode
                       ? 'rgba(129,140,248,0.2)'
@@ -223,8 +234,8 @@ const Navbar: React.FC = () => {
           <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0, ml: 1 }}>
             <Avatar
               sx={{
-                width: 40,
-                height: 40,
+                width: { xs: 34, sm: 40 },
+                height: { xs: 34, sm: 40 },
                 background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
                 boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
               }}
@@ -243,7 +254,7 @@ const Navbar: React.FC = () => {
         PaperProps={{
           sx: {
             mt: 1.5,
-            minWidth: 200,
+            minWidth: { xs: 180, sm: 200 },
             background: isDarkMode
               ? 'linear-gradient(135deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.95) 100%)'
               : 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%)',
@@ -293,7 +304,8 @@ const Navbar: React.FC = () => {
         PaperProps={{
           sx: {
             mt: 1.5,
-            minWidth: 320,
+            width: { xs: 'calc(100vw - 24px)', sm: 360 },
+            maxWidth: '100vw',
             maxHeight: 400,
             background: isDarkMode
               ? 'linear-gradient(135deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.95) 100%)'

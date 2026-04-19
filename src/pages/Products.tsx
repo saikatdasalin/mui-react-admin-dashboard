@@ -12,6 +12,8 @@ import {
   Chip,
   IconButton,
   Rating,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Search,
@@ -50,6 +52,8 @@ const products: Product[] = [
 ];
 
 const Products: React.FC = () => {
+  const theme = useTheme();
+  const isCompact = useMediaQuery(theme.breakpoints.down('sm'));
   const { isDarkMode } = useThemeContext();
   const [searchTerm, setSearchTerm] = useState('');
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -95,7 +99,7 @@ const Products: React.FC = () => {
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, flexWrap: 'wrap', gap: 2 }}>
           <Box>
-            <Typography variant="h4" fontWeight={700} gutterBottom>
+            <Typography variant="h4" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.6rem', sm: '2rem' } }}>
               Products
             </Typography>
             <Typography variant="body1" color="text.secondary">
@@ -105,7 +109,9 @@ const Products: React.FC = () => {
           <Button
             variant="contained"
             startIcon={<Add />}
+            fullWidth={isCompact}
             sx={{
+              maxWidth: { xs: '100%', sm: 'fit-content' },
               background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
               boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
             }}
@@ -129,7 +135,7 @@ const Products: React.FC = () => {
                 size="small"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                sx={{ flex: 1, minWidth: 250 }}
+                sx={{ flex: 1, minWidth: { xs: 0, sm: 240 }, width: { xs: '100%', sm: 'auto' } }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -141,6 +147,7 @@ const Products: React.FC = () => {
               <Button
                 variant="outlined"
                 startIcon={<FilterList />}
+                fullWidth={isCompact}
                 sx={{ borderColor: isDarkMode ? 'rgba(129,140,248,0.3)' : 'rgba(99,102,241,0.3)' }}
               >
                 Filters
@@ -178,7 +185,7 @@ const Products: React.FC = () => {
                 <Box sx={{ position: 'relative' }}>
                   <CardMedia
                     component="img"
-                    height="200"
+                    height={isCompact ? '180' : '200'}
                     image={product.image}
                     alt={product.name}
                     sx={{ objectFit: 'cover' }}

@@ -10,6 +10,7 @@ import {
   FormControl,
   InputLabel,
   useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Line,
@@ -72,6 +73,7 @@ const trafficSources = [
 
 const Analytics: React.FC = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { isDarkMode } = useThemeContext();
   const [timeRange, setTimeRange] = React.useState('year');
 
@@ -84,16 +86,16 @@ const Analytics: React.FC = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, gap: 2, flexWrap: 'wrap' }}>
         <Box>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
+          <Typography variant="h4" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.6rem', sm: '2rem' } }}>
             Analytics Overview
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Detailed insights and performance metrics
           </Typography>
         </Box>
-        <FormControl size="small" sx={{ minWidth: 150 }}>
+        <FormControl size="small" sx={{ width: { xs: '100%', sm: 'auto' }, minWidth: { sm: 150 } }}>
           <InputLabel>Time Range</InputLabel>
           <Select
             value={timeRange}
@@ -117,14 +119,14 @@ const Analytics: React.FC = () => {
             transition={{ duration: 0.3, delay: 0.05 }}
           >
             <Card sx={cardStyle}>
-              <CardContent sx={{ p: 3 }}>
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   Revenue vs Expenses
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                   Monthly financial overview
                 </Typography>
-                <ResponsiveContainer width="100%" height={350}>
+                <ResponsiveContainer width="100%" height={isMobile ? 280 : 350}>
                   <ComposedChart data={monthlyData}>
                     <defs>
                       <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
@@ -161,14 +163,14 @@ const Analytics: React.FC = () => {
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             <Card sx={{ ...cardStyle, height: '100%' }}>
-              <CardContent sx={{ p: 3 }}>
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   Team Performance
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                   Department comparison
                 </Typography>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
                   <RadarChart data={performanceData}>
                     <PolarGrid stroke={isDarkMode ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'} />
                     <PolarAngleAxis dataKey="subject" stroke={theme.palette.text.secondary} />
@@ -191,14 +193,14 @@ const Analytics: React.FC = () => {
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             <Card sx={cardStyle}>
-              <CardContent sx={{ p: 3 }}>
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   Conversion Rate
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                   Visitors to customers conversion
                 </Typography>
-                <ResponsiveContainer width="100%" height={280}>
+                <ResponsiveContainer width="100%" height={isMobile ? 240 : 280}>
                   <BarChart data={conversionData}>
                     <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} />
                     <XAxis dataKey="name" stroke={theme.palette.text.secondary} />
@@ -228,7 +230,7 @@ const Analytics: React.FC = () => {
             transition={{ duration: 0.3, delay: 0.15 }}
           >
             <Card sx={{ ...cardStyle, height: '100%' }}>
-              <CardContent sx={{ p: 3 }}>
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   Traffic Sources
                 </Typography>

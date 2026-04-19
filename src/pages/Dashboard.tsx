@@ -9,6 +9,7 @@ import {
   Avatar,
   IconButton,
   useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   People,
@@ -87,6 +88,8 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon, gradient, delay }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { isDarkMode } = useThemeContext();
   const isPositive = change >= 0;
 
@@ -114,12 +117,12 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon, gradien
           },
         }}
       >
-        <CardContent sx={{ p: 3 }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
             <Box
               sx={{
-                width: 56,
-                height: 56,
+                width: { xs: 48, sm: 56 },
+                height: { xs: 48, sm: 56 },
                 borderRadius: 3,
                 background: gradient,
                 display: 'flex',
@@ -137,7 +140,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon, gradien
           <Typography variant="body2" color="text.secondary" gutterBottom>
             {title}
           </Typography>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
+          <Typography variant={isMobile ? 'h5' : 'h4'} fontWeight={700} gutterBottom>
             {value}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -164,6 +167,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon, gradien
 
 const Dashboard: React.FC = () => {
   const theme = useTheme();
+  const isCompactTable = useMediaQuery(theme.breakpoints.down('md'));
   const { isDarkMode } = useThemeContext();
 
   const getStatusColor = (status: string) => {
@@ -184,10 +188,10 @@ const Dashboard: React.FC = () => {
   return (
     <Box>
       <Box>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
+        <Typography variant="h4" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.6rem', sm: '2rem' } }}>
           Dashboard Overview
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: { xs: 3, sm: 4 } }}>
           Welcome back! Here's what's happening with your business today.
         </Typography>
       </Box>
@@ -254,8 +258,8 @@ const Dashboard: React.FC = () => {
                                 border: `1px solid ${isDarkMode ? 'rgba(129,140,248,0.2)' : 'rgba(99,102,241,0.15)'}`,
               }}
             >
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 1.5 }}>
                   <Box>
                     <Typography variant="h6" fontWeight={600}>
                       Revenue Overview
@@ -264,7 +268,7 @@ const Dashboard: React.FC = () => {
                       Monthly revenue comparison
                     </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Box sx={{ width: 12, height: 12, borderRadius: 1, bgcolor: '#6366f1' }} />
                       <Typography variant="caption">This Year</Typography>
@@ -362,7 +366,7 @@ const Dashboard: React.FC = () => {
                     <Tooltip />
                   </PieChart>
                 </ResponsiveContainer>
-                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 2, flexWrap: 'wrap' }}>
                   {pieData.map((item) => (
                     <Box key={item.name} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: item.color }} />
@@ -515,91 +519,144 @@ const Dashboard: React.FC = () => {
                 View All
               </Typography>
             </Box>
-            <Box sx={{ overflowX: 'auto' }}>
-              <Box sx={{ minWidth: 600 }}>
-                {/* Header */}
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 2fr 1fr 1fr',
-                    gap: 2,
-                    py: 1.5,
-                    px: 2,
-                    borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                  }}
-                >
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    ORDER ID
-                  </Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    CUSTOMER
-                  </Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    AMOUNT
-                  </Typography>
-                  <Typography variant="caption" fontWeight={600} color="text.secondary">
-                    STATUS
-                  </Typography>
-                </Box>
-                {/* Rows */}
+            {isCompactTable ? (
+              <Box sx={{ display: 'grid', gap: 1.5 }}>
                 {recentOrders.map((order) => (
                   <Box
                     key={order.id}
                     sx={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 2fr 1fr 1fr',
-                      gap: 2,
-                      py: 2,
-                      px: 2,
-                      borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
-                      '&:hover': {
-                        bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
-                      },
-                      transition: 'background-color 0.2s ease',
+                      p: 1.75,
+                      borderRadius: 2,
+                      border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
+                      bgcolor: isDarkMode ? 'rgba(129,140,248,0.04)' : 'rgba(99,102,241,0.03)',
                     }}
                   >
-                    <Typography variant="body2" fontWeight={500}>
-                      {order.id}
-                    </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                      <Avatar
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.25 }}>
+                      <Typography variant="body2" fontWeight={600}>{order.id}</Typography>
+                      <Typography variant="body2" fontWeight={600}>{order.amount}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
+                        <Avatar
+                          sx={{
+                            width: 30,
+                            height: 30,
+                            fontSize: '0.75rem',
+                            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                          }}
+                        >
+                          {order.avatar}
+                        </Avatar>
+                        <Typography variant="body2" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {order.customer}
+                        </Typography>
+                      </Box>
+                      <Box
                         sx={{
-                          width: 32,
-                          height: 32,
-                          fontSize: '0.75rem',
-                          background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          px: 1.25,
+                          py: 0.35,
+                          borderRadius: 2,
+                          bgcolor: `${getStatusColor(order.status)}15`,
+                          width: 'fit-content',
                         }}
                       >
-                        {order.avatar}
-                      </Avatar>
-                      <Typography variant="body2">{order.customer}</Typography>
-                    </Box>
-                    <Typography variant="body2" fontWeight={600}>
-                      {order.amount}
-                    </Typography>
-                    <Box
-                      sx={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        px: 1.5,
-                        py: 0.5,
-                        borderRadius: 2,
-                        bgcolor: `${getStatusColor(order.status)}15`,
-                        width: 'fit-content',
-                      }}
-                    >
-                      <Typography
-                        variant="caption"
-                        fontWeight={600}
-                        sx={{ color: getStatusColor(order.status) }}
-                      >
-                        {order.status}
-                      </Typography>
+                        <Typography variant="caption" fontWeight={600} sx={{ color: getStatusColor(order.status) }}>
+                          {order.status}
+                        </Typography>
+                      </Box>
                     </Box>
                   </Box>
                 ))}
               </Box>
-            </Box>
+            ) : (
+              <Box sx={{ overflowX: 'auto' }}>
+                <Box sx={{ minWidth: 600 }}>
+                  {/* Header */}
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 2fr 1fr 1fr',
+                      gap: 2,
+                      py: 1.5,
+                      px: 2,
+                      borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                    }}
+                  >
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                      ORDER ID
+                    </Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                      CUSTOMER
+                    </Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                      AMOUNT
+                    </Typography>
+                    <Typography variant="caption" fontWeight={600} color="text.secondary">
+                      STATUS
+                    </Typography>
+                  </Box>
+                  {/* Rows */}
+                  {recentOrders.map((order) => (
+                    <Box
+                      key={order.id}
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 2fr 1fr 1fr',
+                        gap: 2,
+                        py: 2,
+                        px: 2,
+                        borderBottom: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
+                        '&:hover': {
+                          bgcolor: isDarkMode ? 'rgba(129,140,248,0.05)' : 'rgba(99,102,241,0.03)',
+                        },
+                        transition: 'background-color 0.2s ease',
+                      }}
+                    >
+                      <Typography variant="body2" fontWeight={500}>
+                        {order.id}
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        <Avatar
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            fontSize: '0.75rem',
+                            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                          }}
+                        >
+                          {order.avatar}
+                        </Avatar>
+                        <Typography variant="body2">{order.customer}</Typography>
+                      </Box>
+                      <Typography variant="body2" fontWeight={600}>
+                        {order.amount}
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          px: 1.5,
+                          py: 0.5,
+                          borderRadius: 2,
+                          bgcolor: `${getStatusColor(order.status)}15`,
+                          width: 'fit-content',
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          fontWeight={600}
+                          sx={{ color: getStatusColor(order.status) }}
+                        >
+                          {order.status}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            )}
           </CardContent>
         </Card>
       </motion.div>
